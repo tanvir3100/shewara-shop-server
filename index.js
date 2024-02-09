@@ -27,10 +27,24 @@ async function run() {
 
         const productsCollection = client.db('shewaraBD').collection('products')
         const teamsCollection = client.db('shewaraBD').collection('teams')
+        const cardsCollection = client.db('shewaraBD').collection('cards')
 
         //products related section
         app.get('/products', async (req, res) => {
             const cursor = productsCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        //cart section
+        app.post('/cards', async (req, res) => {
+            const cardItems = req.body;
+            const result = await cardsCollection.insertOne(cardItems);
+            res.send(result)
+
+        })
+        app.get('/cards', async (req, res) => {
+            const cursor = cardsCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
