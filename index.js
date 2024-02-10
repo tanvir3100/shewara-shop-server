@@ -1,6 +1,6 @@
 const express = require('express')
 var cors = require('cors')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 require('dotenv').config();
 const port = process.env.PORT || 3200;
@@ -36,7 +36,7 @@ async function run() {
             res.send(result);
         })
 
-        //cart section
+        //card section
         app.post('/cards', async (req, res) => {
             const cardItems = req.body;
             const result = await cardsCollection.insertOne(cardItems);
@@ -48,6 +48,23 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+        app.get('/cards/:id', async (req, res) => {
+            const cursor = cardsCollection.findOne();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+        app.delete('/cards/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await cardsCollection.deleteOne(query);
+            res.send(result)
+        })
+        // app.delete('/carts/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: new ObjectId(id) }
+        //     const result = await cartCollection.deleteOne(query);
+        //     res.send(result)
+        // })
 
         //team related section
         app.get('/teams', async (req, res) => {
